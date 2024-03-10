@@ -1,2 +1,2 @@
-# Example-Redux-App
-Example redux application for full-stack-open
+# Example-React-Apps
+Example react applications for full-stack-open
