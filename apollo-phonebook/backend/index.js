@@ -65,7 +65,7 @@ const resolvers = {
         currentUser.friends = currentUser.friends.concat(person)
         await currentUser.save()
       } catch (error) {
-        throw new GraphQLError("Saving user failed", {
+        throw new GraphQLError(error, {
           extensions: {
             code: "BAD_USER_INPUT",
             invalidArgs: args.name,
@@ -78,18 +78,20 @@ const resolvers = {
     },
     editNumber: async (root, args) => {
       const person = await Person.findOne({ name: args.name })
-      person.phone = args.phone
 
-      try {
-        await person.save()
-      } catch (error) {
-        throw new GraphQLError("Saving number failed", {
-          extensions: {
-            code: "BAD_USER_INPUT",
-            invalidArgs: args.name,
-            error,
-          },
-        })
+      if (person) {
+        try {
+          person.phone = args.phone
+          await person.save()
+        } catch (error) {
+          throw new GraphQLError("Saving number failed", {
+            extensions: {
+              code: "BAD_USER_INPUT",
+              invalidArgs: args.name,
+              error,
+            },
+          })
+        }
       }
 
       return person
